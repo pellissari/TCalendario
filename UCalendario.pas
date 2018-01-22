@@ -17,9 +17,11 @@ type
   private
     { Private declarations }
     lista: TComponentList;
+    listaDeFeriados: TList<TDateTime>;
     labelAnoMes: TLabel;
     labelNomesDosDias: TLabel;
     FCorUp: TColor;
+    FCorFeriado: TColor;
     FAno: Integer;
     FMes: Integer;
     FCount : Integer;
@@ -35,6 +37,7 @@ type
     procedure IniciaPosicoes;
     procedure IniciaContador;
     procedure IniciaListaComponentes;
+    procedure IniciaListaDeFeriados;
     procedure SetaMes(mes: Integer);
     procedure SetaAno(ano: Integer);
     procedure AtualizaLabelAnoMes;
@@ -46,12 +49,13 @@ type
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure CarregaFeriados(lista: TList<TDateTime>);
     function RetornaDatasSelecionadas: TList<TDateTime>;
     function Count : Integer;
-
   published
     { Published declarations }
     property corUp: TColor read FCorUp write FCorUp;
+    property corFeriado: TColor read FCorFeriado write FCorFeriado;
     property ano: Integer read FAno write SetaAno;
     property mes: Integer read FMes write SetaMes;
   end;
@@ -108,6 +112,15 @@ begin
       begin
         TPanel(lista.Items[i]).Enabled := True;
         TPanel(lista.Items[i]).Caption := InttoStr(ContadorDeDias);
+
+        if listaDeFeriados.Contains(StrToDate(InttoStr(ContadorDeDias)+'/'+
+                                                    InttoStr(mes) + '/' +
+                                                    InttoStr(ano)))  then
+        begin
+          TPanel(lista.Items[i]).Font.Color := corFeriado;
+        end;
+
+
       end;
 
     end;
@@ -123,6 +136,12 @@ begin
   labelAnoMes.Caption := FormatSettings.LongMonthNames[mes] + '/' + InttoStr(ano);
 end;
 
+procedure TCalendario.CarregaFeriados(lista: TList<TDateTime>);
+begin
+  listaDeFeriados := lista;
+  AtualizaDiasDoMes;
+end;
+
 function TCalendario.Count: Integer;
 begin
   Result := FCount;
@@ -134,6 +153,7 @@ begin
   IniciaContador;
   SetaTamanhoInicial;
   IniciaListaComponentes;
+  IniciaListaDeFeriados;
   SetaCorInicial;
   IniciaPosicoes;
   IniciaDias;
@@ -223,6 +243,11 @@ end;
 procedure TCalendario.IniciaListaComponentes;
 begin
   lista := TComponentList.Create;
+end;
+
+procedure TCalendario.IniciaListaDeFeriados;
+begin
+  listaDeFeriados := TList<TDateTime>.Create;
 end;
 
 procedure TCalendario.IniciaPosicoes;
@@ -343,6 +368,7 @@ end;
 procedure TCalendario.SetaCorInicial;
 begin
   corUp := clHighlight;
+  corFeriado := clRed;
 end;
 
 procedure TCalendario.SetaMes(mes: Integer);
