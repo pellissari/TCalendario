@@ -1,6 +1,7 @@
 unit UCalendario;
 
 interface
+{Teste}
 
 uses
   System.SysUtils, System.Classes, System.Contnrs, Vcl.Controls, Vcl.ExtCtrls,
