@@ -52,6 +52,7 @@ type
     procedure CarregaFeriados(lista: TList<TDateTime>);
     function RetornaDatasSelecionadas: TList<TDateTime>;
     function Count : Integer;
+	  procedure LimpaCalendario;
   published
     { Published declarations }
     property corUp: TColor read FCorUp write FCorUp;
@@ -318,6 +319,21 @@ begin
     Dec(FCount);
   end;
 
+end;
+
+procedure TCalendario.LimpaCalendario;
+var
+  I: Integer;
+begin
+  for I := 0 to lista.Count -1 do
+  begin
+    if TPanel(lista.Items[i]).BevelInner = bvRaised then
+    begin
+      TPanel(lista.Items[i]).BevelInner := bvLowered;
+      TPanel(lista.Items[i]).Color := clBtnFace;
+      Dec(FCount);
+    end;
+  end;
 end;
 
 function TCalendario.RetornaDatasSelecionadas: TList<TDateTime>;
